@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summariser by WebDukaan | AI-Powered Text Summarization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        
+        .summary-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .typing-indicator::after {
+            content: '...';
+            animation: typing 1.5s infinite;
+        }
+        
+        @keyframes typing {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+        
+        .feature-icon {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <!-- Header -->
+<header class="gradient-bg text-white">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-scroll text-2xl"></i>
+                <h1 class="text-2xl font-bold">Summariser<span class="text-indigo-200"> by WebDukaan</span></h1>
+                <span class="ml-4 text-red-500 block mt-2 font-medium italic">Welcome, <span id="welcomeName" class="font-semibold underline"></span>!</span>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="hover:text-indigo-200 font-medium">Home</a>
+                <a href="#" class="hover:text-indigo-200">Features</a>
+                <a href="#" class="hover:text-indigo-200">Pricing</a>
+                <a href="#" class="hover:text-indigo-200">API</a>
+                <a href="#" class="hover:text-indigo-200">Contact</a>
+            </nav>
+            <div class="flex items-center space-x-4">
+                <button id="logoutBtn" class="px-4 py-2 rounded-lg bg-white text-indigo-600 font-medium hover:bg-indigo-50 transition">Logout</button>
+                <button class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">AI-Powered Text Summarization</h2>
+            <p class="text-xl md:text-2xl text-indigo-100 max-w-3xl mx-auto mb-8">
+                Transform lengthy articles, documents, and reports into concise summaries with our advanced AI technology.
+            </p>
+            <div class="bg-white rounded-xl shadow-xl p-1 max-w-4xl mx-auto">
+                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Dashboard preview" class="rounded-lg w-full h-auto">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12 -mt-10">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-12">
+            <div class="p-6 md:p-8">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="md:w-2/3">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Paste your text to summarize</h3>
+                        <textarea id="inputText" class="w-full h-48 p-4 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Paste your article, research paper, or any text content here..."></textarea>
+                        
+                        <div class="mt-4 flex flex-wrap gap-3">
+                            <button id="summarizeBtn" class="px-6 py-3 gradient-bg text-white font-medium rounded-lg hover:opacity-90 transition flex items-center">
+                                <i class="fas fa-magic mr-2"></i> Summarize Now
+                            </button>
+                            <button id="clearBtn" class="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition flex items-center">
+                                <i class="fas fa-trash-alt mr-2"></i> Clear
+                            </button>
+
+                            <a href="chatbot.html">
+                                <button id="chatbotBtn" class="px-6 py-3 bg-gray-600 text-white font-medium rounded-lg hover:opacity-90 transition flex items-center">
+                                    <i class="fas fa-robot mr-2"></i> 
+                                    Ask to ChatBot
+                                </button>
+                            </a>
+                        </div>
+                        
+                        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2 font-medium">Summary Length:</label>
+                                <select id="summaryLength" class="w-full p-2 border border-gray-200 rounded-lg">
+                                    <option value="short">Short (1-2 sentences)</option>
+                                    <option value="medium" selected>Medium (3-5 sentences)</option>
+                                    <option value="long">Long (paragraph)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2 font-medium">Content Type:</label>
+                                <select id="contentType" class="w-full p-2 border border-gray-200 rounded-lg">
+                                    <option value="general" selected>General</option>
+                                    <option value="academic">Academic</option>
+                                    <option value="news">News Article</option>
+                                    <option value="business">Business</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 mb-2 font-medium">Reading Level:</label>
+                                <select id="readingLevel" class="w-full p-2 border border-gray-200 rounded-lg">
+                                    <option value="easy">Easy</option>
+                                    <option value="standard" selected>Standard</option>
+                                    <option value="advanced">Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="md:w-1/3 bg-gray-50 p-6 rounded-lg">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4">How it works</h4>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-1 text-indigo-600"></i>
+                                </div>
+                                <span class="text-gray-700">Paste your text in the input box</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-2 text-indigo-600"></i>
+                                </div>
+                                <span class="text-gray-700">Adjust settings as needed</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-3 text-indigo-600"></i>
+                                </div>
+                                <span class="text-gray-700">Click "Summarize Now" button</span>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                                    <i class="fas fa-4 text-indigo-600"></i>
+                                </div>
+                                <span class="text-gray-700">Get your concise summary instantly</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="mt-6 bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded">
+                            <p class="text-indigo-800"><i class="fas fa-lightbulb mr-2"></i> <strong>Pro Tip:</strong> For best results, use text between 200-2000 words.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden bg-white rounded-xl shadow-lg overflow-hidden mb-12">
+            <div class="p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-gray-800">Your Summary</h3>
+                <div class="flex space-x-3">
+                    <button id="copyBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                        <i class="fas fa-copy mr-2"></i> Copy
+                    </button>
+                    <button id="downloadBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition flex items-center text-sm">
+                        <i class="fas fa-download mr-2"></i> Download
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div id="summaryOutput" class="prose max-w-none text-gray-700"></div>
+                <div id="statsOutput" class="mt-6 p-4 bg-gray-50 rounded-lg flex flex-wrap justify-between items-center">
+                    <div class="flex items-center mb-2 md:mb-0">
+                        <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-chart-bar text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Original Length</div>
+                            <div id="originalLength" class="font-medium">0 words</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center mb-2 md:mb-0">
+                        <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-compress text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Summary Length</div>
+                            <div id="summaryLengthStat" class="font-medium">0 words</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="bg-indigo-100 p-2 rounded-full mr-3">
+                            <i class="fas fa-percentage text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-500">Reduction</div>
+                            <div id="reductionStat" class="font-medium">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Powerful Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="summary-card bg-white p-6 rounded-xl">
+                    <div class="text-4xl mb-4 feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Lightning Fast</h3>
+                    <p class="text-gray-600">Get summaries in seconds with our high-performance AI engine that processes text at remarkable speed.</p>
+                </div>
+                <div class="summary-card bg-white p-6 rounded-xl">
+                    <div class="text-4xl mb-4 feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Customizable</h3>
+                    <p class="text-gray-600">Adjust summary length, reading level, and content type to get exactly what you need.</p>
+                </div>
+                <div class="summary-card bg-white p-6 rounded-xl">
+                    <div class="text-4xl mb-4 feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Secure & Private</h3>
+                    <p class="text-gray-600">Your data is never stored or shared. We prioritize your privacy and security.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Trusted by Professionals</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah J." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Amit Thakur</h4>
+                            <p class="text-gray-600 text-sm">Research Scientist, MIT</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"Summariser by WebDukaan has transformed how I review academic papers. I can quickly grasp key points before diving into full texts, saving me hours each week."</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael T." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Raushan Sharma</h4>
+                            <p class="text-gray-600 text-sm">Financial Analyst, JPMorgan</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"In the fast-paced world of finance, getting quick insights from lengthy reports is crucial. This tool helps me stay ahead with accurate, concise summaries."</p>
+                    <div class="mt-4 text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-scroll mr-2"></i> Summariser
+                    </h4>
+                    <p class="text-gray-400">Advanced AI-powered text summarization tool for professionals, students, and researchers.</p>
+                    <div class="mt-4 flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold text-gray-200 mb-4">Product</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">API</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Changelog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-gray-200 mb-4">Resources</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Blog</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Tutorials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-gray-200 mb-4">Company</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Careers</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 Summariser by WebDukaan. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-xl max-w-md w-full text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 mx-auto mb-4"></div>
+            <h3 class="text-xl font-medium text-gray-800 mb-2">Processing Your Text</h3>
+            <p class="text-gray-600">Analyzing content and generating summary...</p>
+            <div class="mt-4 text-indigo-600 typing-indicator">Almost done</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in (simple check for demo)
+            const isLoggedIn = sessionStorage.getItem('loggedIn') === 'true';
+            if (!isLoggedIn) {
+                window.location.href = 'login_index.html';
+            }
+
+            const summarizeBtn = document.getElementById('summarizeBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const inputText = document.getElementById('inputText');
+            const summaryLength = document.getElementById('summaryLength');
+            const contentType = document.getElementById('contentType');
+            const readingLevel = document.getElementById('readingLevel');
+            const resultsSection = document.getElementById('resultsSection');
+            const summaryOutput = document.getElementById('summaryOutput');
+            const originalLength = document.getElementById('originalLength');
+            const summaryLengthStat = document.getElementById('summaryLengthStat');
+            const reductionStat = document.getElementById('reductionStat');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', function() {
+                sessionStorage.removeItem('loggedIn');
+                window.location.href = 'login_index.html';
+            });
+            
+            // Improved text summarization function
+            function summarizeText(text, length = 'medium', type = 'general', level = 'standard') {
+                // Basic text cleaning
+                text = text.replace(/\s+/g, ' ').trim();
+                
+                // Split into sentences
+                const sentences = text.split(/(?<=[.!?])\s+/).filter(s => s.trim().length > 0);
+                
+                if (sentences.length === 0) return {
+                    summary: "No meaningful sentences found to summarize.",
+                    originalWords: 0,
+                    summaryWords: 0,
+                    reduction: 0
+                };
+                
+                // Score sentences based on importance
+                const scoredSentences = sentences.map(sentence => {
+                    let score = 0;
+                    
+                    // Position matters (first/last often important)
+                    const position = sentences.indexOf(sentence);
+                    if (position === 0) score += 2;
+                    if (position === sentences.length - 1) score += 1;
+                    
+                    // Length matters (medium is often best)
+                    const wordCount = sentence.split(/\s+/).length;
+                    if (wordCount > 8 && wordCount < 25) score += 1;
+                    
+                    // Keywords matter
+                    const importanceKeywords = {
+                        general: ['important', 'conclusion', 'summary', 'however', 'therefore'],
+                        academic: ['study shows', 'research indicates', 'findings suggest', 'results demonstrate'],
+                        news: ['reported', 'according to', 'announced', 'stated'],
+                        business: ['growth', 'strategy', 'market', 'revenue', 'forecast']
+                    };
+                    
+                    importanceKeywords[type].forEach(keyword => {
+                        if (sentence.toLowerCase().includes(keyword)) score += 1;
+                    });
+                    
+                    // Questions are often important
+                    if (sentence.includes('?')) score += 1;
+                    
+                    return { sentence, score };
+                });
+                
+                // Sort by score (highest first)
+                scoredSentences.sort((a, b) => b.score - a.score);
+                
+                // Determine how many sentences to include
+                let sentenceCount;
+                switch(length) {
+                    case 'short': 
+                        sentenceCount = Math.min(2, sentences.length); 
+                        break;
+                    case 'long': 
+                        sentenceCount = Math.min(8, Math.max(3, Math.floor(sentences.length / 3))); 
+                        break;
+                    default: 
+                        sentenceCount = Math.min(5, Math.max(3, Math.floor(sentences.length / 2)));
+                }
+                
+                // Get top sentences (maintaining original order)
+                const topSentences = scoredSentences.slice(0, sentenceCount);
+                topSentences.sort((a, b) => 
+                    sentences.indexOf(a.sentence) - sentences.indexOf(b.sentence));
+                
+                // Generate stats
+                const originalWordCount = text.split(/\s+/).length;
+                const summaryWordCount = topSentences.reduce((count, {sentence}) => 
+                    count + sentence.split(/\s+/).length, 0);
+                const reduction = Math.round(100 - (summaryWordCount / originalWordCount * 100));
+                
+                // Adjust for reading level
+                let summaryText = topSentences.map(({sentence}) => sentence).join(' ');
+                
+                if (level === 'easy') {
+                    summaryText = simplifyText(summaryText);
+                } else if (level === 'advanced') {
+                    summaryText = formalizeText(summaryText);
+                }
+                
+                return {
+                    summary: summaryText,
+                    originalWords: originalWordCount,
+                    summaryWords: summaryWordCount,
+                    reduction: reduction
+                };
+            }
+            
+            // Helper function to simplify text
+            function simplifyText(text) {
+                // This would be more sophisticated in a real app
+                return text
+                    .replace(/however/gi, 'but')
+                    .replace(/therefore/gi, 'so')
+                    .replace(/utilize/gi, 'use')
+                    .replace(/commence/gi, 'start')
+                    .replace(/terminate/gi, 'end');
+            }
+            
+            // Helper function to formalize text
+            function formalizeText(text) {
+                // This would be more sophisticated in a real app
+                return text
+                    .replace(/but/gi, 'however')
+                    .replace(/so/gi, 'therefore')
+                    .replace(/start/gi, 'commence')
+                    .replace(/end/gi, 'terminate');
+            }
+            
+            // Summarize button click handler
+            summarizeBtn.addEventListener('click', function() {
+                const text = inputText.value.trim();
+                if (!text) {
+                    alert('Please enter some text to summarize');
+                    return;
+                }
+                
+                // Show loading indicator
+                loadingIndicator.classList.remove('hidden');
+                
+                // Simulate processing delay
+                setTimeout(() => {
+                    const length = summaryLength.value;
+                    const type = contentType.value;
+                    const level = readingLevel.value;
+                    
+                    const result = summarizeText(text, length, type, level);
+                    
+                    // Display results
+                    summaryOutput.innerHTML = `<p class="text-gray-800">${result.summary}</p>`;
+                    originalLength.textContent = `${result.originalWords} words`;
+                    summaryLengthStat.textContent = `${result.summaryWords} words`;
+                    reductionStat.textContent = `${result.reduction}%`;
+                    
+                    // Show results and hide loading
+                    resultsSection.classList.remove('hidden');
+                    loadingIndicator.classList.add('hidden');
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }, 1200);
+            });
+            
+            // Clear button click handler
+            clearBtn.addEventListener('click', function() {
+                inputText.value = '';
+                resultsSection.classList.add('hidden');
+            });
+            
+            // Copy button click handler
+            copyBtn.addEventListener('click', function() {
+                const range = document.createRange();
+                range.selectNode(summaryOutput);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                
+                // Show copied feedback
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check mr-2"></i> Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+            
+            // Download button click handler
+            downloadBtn.addEventListener('click', function() {
+                const summary = summaryOutput.textContent;
+                const blob = new Blob([summary], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'summary.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html>
